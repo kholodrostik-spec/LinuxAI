@@ -1,0 +1,30 @@
+[
+  {
+    "title": "Arch Wiki - NVIDIA",
+    "url": "https://wiki.archlinux.org/title/NVIDIA",
+    "source_type": "wiki",
+    "topic": "nvidia",
+    "trust_level": "medium"
+  },
+  {
+    "title": "Arch Wiki - Wireless network configuration",
+    "url": "https://wiki.archlinux.org/title/Network_configuration/Wireless",
+    "source_type": "wiki",
+    "topic": "wifi",
+    "trust_level": "medium"
+  },
+  {
+    "title": "Arch Wiki - Intel graphics",
+    "url": "https://wiki.archlinux.org/title/Intel_graphics",
+    "source_type": "wiki",
+    "topic": "intel",
+    "trust_level": "medium"
+  },
+  {
+    "title": "Arch Wiki - AMDGPU",
+    "url": "https://wiki.archlinux.org/title/AMDGPU",
+    "source_type": "wiki",
+    "topic": "amd",
+    "trust_level": "medium"
+  }
+]

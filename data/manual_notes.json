@@ -1,0 +1,58 @@
+[
+  {
+    "title": "NVIDIA Secure Boot issue",
+    "topic": "nvidia",
+    "source_type": "manual_note",
+    "trust_level": "medium",
+    "text": "If the NVIDIA driver is installed but the kernel module is not loading, check whether Secure Boot is enabled. Secure Boot can prevent unsigned NVIDIA kernel modules from loading. To check: mokutil --sb-state. To disable, use BIOS/UEFI settings."
+  },
+  {
+    "title": "Ubuntu NVIDIA driver installation",
+    "topic": "nvidia",
+    "source_type": "manual_note",
+    "trust_level": "medium",
+    "text": "On Ubuntu, NVIDIA drivers can be installed using the Additional Drivers tool or the ubuntu-drivers command: sudo ubuntu-drivers autoinstall. After installation, reboot and verify the driver with nvidia-smi. To list available drivers: ubuntu-drivers devices."
+  },
+  {
+    "title": "NVIDIA module blacklist nouveau",
+    "topic": "nvidia",
+    "source_type": "manual_note",
+    "trust_level": "medium",
+    "text": "Before installing the proprietary NVIDIA driver, the open-source nouveau driver must be blacklisted. Create /etc/modprobe.d/blacklist-nouveau.conf with: blacklist nouveau and options nouveau modeset=0. Then run: sudo update-initramfs -u and reboot."
+  },
+  {
+    "title": "Intel Wi-Fi firmware",
+    "topic": "wifi",
+    "source_type": "manual_note",
+    "trust_level": "medium",
+    "text": "Intel Wi-Fi adapters such as AX200 and AX201 use the iwlwifi kernel driver. On Ubuntu and Debian, firmware is provided by the linux-firmware package. To install: sudo apt install linux-firmware. After installation, reload the module: sudo modprobe -r iwlwifi && sudo modprobe iwlwifi."
+  },
+  {
+    "title": "Wi-Fi rfkill soft block",
+    "topic": "wifi",
+    "source_type": "manual_note",
+    "trust_level": "medium",
+    "text": "If Wi-Fi is not detected, it may be soft-blocked. Check with: rfkill list. To unblock: rfkill unblock wifi or rfkill unblock all. A soft block can occur after suspend/resume or due to a hardware switch."
+  },
+  {
+    "title": "Linux diagnostic commands",
+    "topic": "diagnostics",
+    "source_type": "manual_note",
+    "trust_level": "medium",
+    "text": "Essential diagnostic commands: lspci -nnk (show PCI devices with kernel modules), lsusb (show USB devices), uname -r (kernel version), lsmod (loaded modules), modinfo <module> (module details), rfkill list (wireless block status), ip a (network interfaces), dmesg | grep -i firmware (firmware errors), journalctl -b (boot log)."
+  },
+  {
+    "title": "Check loaded kernel module for device",
+    "topic": "diagnostics",
+    "source_type": "manual_note",
+    "trust_level": "medium",
+    "text": "To check which kernel module drives a PCI device: lspci -nnk | grep -A3 'VGA\\|Network\\|Wi-Fi'. The 'Kernel driver in use' field shows the active module. If this field is missing, no driver is loaded. Use dmesg | grep <module_name> to check for errors."
+  },
+  {
+    "title": "AMD GPU amdgpu driver",
+    "topic": "amd",
+    "source_type": "manual_note",
+    "trust_level": "medium",
+    "text": "AMD Radeon GPUs on Linux typically use the amdgpu kernel driver, which is included in the mainline kernel since version 4.2. No additional installation is usually needed. Verify with: lspci -nnk | grep -A3 VGA. For Vulkan support install: sudo apt install mesa-vulkan-drivers."
+  }
+]

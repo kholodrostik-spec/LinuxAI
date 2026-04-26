@@ -1,0 +1,10 @@
+psycopg[binary]
+pgvector
+python-dotenv
+sentence-transformers
+torch
+numpy
+requests
+beautifulsoup4
+lxml
+rich
