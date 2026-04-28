@@ -2,35 +2,68 @@ from app.sql_search import sql_search
 from app.vector_search import vector_search
 
 
-def build_rag_context(query: str) -> str:
-    sql_results = sql_search(query)
-    vector_results = vector_search(query)
+# Column names per SQL section — keeps the LLM prompt readable
+_COLUMNS: dict[str, list[str]] = {
+    "devices":  ["id", "name", "vendor", "device_type", "pci_id", "usb_id", "notes"],
+    "drivers":  ["id", "name", "kernel_module", "driver_type", "notes"],
+    "packages": ["id", "name", "distro", "purpose", "install_command"],
+    "commands": ["id", "title", "distro", "command", "risk_level", "purpose"],
+}
 
-    parts = []
 
-    parts.append("=== SQL FACTS ===")
+def _format_rows(section: str, rows: list[tuple]) -> list[str]:
+    lines = [f"\n[{section.upper()}]"]
+
+    if not rows:
+        lines.append("  No results.")
+        return lines
+
+    cols = _COLUMNS.get(section, [])
+    for row in rows:
+        if cols:
+            # Format as "key: value" pairs, skip None/empty values
+            pairs = ", ".join(
+                f"{k}: {v}"
+                for k, v in zip(cols, row)
+                if v is not None and str(v).strip()
+            )
+            lines.append(f"  - {pairs}")
+        else:
+            lines.append(f"  - {row}")
+
+    return lines
+
+
+def build_rag_context(
+    query: str,
+    vector_limit: int = 5,
+    min_similarity: float = 0.40,
+) -> str:
+    sql_results    = sql_search(query)
+    vector_results = vector_search(query, limit=vector_limit)
+
+    parts = ["=== SQL FACTS ==="]
 
     for section, rows in sql_results.items():
-        parts.append(f"\n[{section.upper()}]")
-
-        if not rows:
-            parts.append("No results.")
-            continue
-
-        for row in rows:
-            parts.append(str(row))
+        parts.extend(_format_rows(section, rows))
 
     parts.append("\n=== VECTOR DOCUMENTS ===")
 
-    if not vector_results:
-        parts.append("No vector results.")
+    filtered = [
+        item for item in vector_results
+        if item.get("similarity", 0) >= min_similarity
+    ]
+
+    if not filtered:
+        parts.append("  No relevant vector results above similarity threshold.")
     else:
-        for item in vector_results:
+        for index, item in enumerate(filtered, start=1):
             parts.append(
-                f"\nTitle: {item['title']}\n"
-                f"Topic: {item['topic']}\n"
-                f"Similarity: {item['similarity']:.4f}\n"
-                f"Text: {item['text']}"
+                f"\nDocument {index}:\n"
+                f"  Title:      {item['title']}\n"
+                f"  Topic:      {item['topic']}\n"
+                f"  Similarity: {item['similarity']:.4f}\n"
+                f"  Text:\n{item['text']}"
             )
 
     return "\n".join(parts)

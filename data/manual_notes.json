@@ -54,5 +54,19 @@
     "source_type": "manual_note",
     "trust_level": "medium",
     "text": "AMD Radeon GPUs on Linux typically use the amdgpu kernel driver, which is included in the mainline kernel since version 4.2. No additional installation is usually needed. Verify with: lspci -nnk | grep -A3 VGA. For Vulkan support install: sudo apt install mesa-vulkan-drivers."
+  },
+  {
+    "title": "Realtek RTL8821CE Wi-Fi on Ubuntu",
+    "topic": "realtek_wifi",
+    "source_type": "manual_note",
+    "trust_level": "medium",
+    "text": "Realtek RTL8821CE Wi-Fi issues on Ubuntu should be diagnosed before installing drivers. First identify the exact adapter with lspci -nnk and check whether a kernel driver is in use. Also check rfkill list and dmesg | grep -i firmware. Do not assume firmware-realtek is available on Ubuntu. Do not reload the 8821ce module unless it is installed and visible in lsmod. If no driver is in use, the solution may depend on the Ubuntu version, kernel version, Secure Boot state and whether a DKMS driver is available."
+  },
+  {
+    "title": "Intel laptop audio troubleshooting on Ubuntu",
+    "topic": "audio",
+    "source_type": "manual_note",
+    "trust_level": "medium",
+    "text": "Intel laptop audio problems on Ubuntu should be diagnosed through ALSA, PipeWire, and Sound Open Firmware. First check cat /proc/asound/cards to see whether the kernel detects a sound card. Then check systemctl --user status pipewire and pactl list short sinks. On newer Intel laptops, missing SOF firmware can cause audio devices to be absent. Avoid using ubuntu-drivers devices as the main audio troubleshooting step because it is usually more relevant to proprietary GPU drivers."
   }
 ]
