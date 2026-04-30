@@ -350,16 +350,29 @@ def main() -> None:
             ])
 
             inserted_commands = 0
+
             for cmd in commands:
                 distro_id_val, title = cmd[0], cmd[1]
-                cur.execute(
-                    """
-                    SELECT id FROM commands
-                    WHERE title = %s
-                      AND (distro_id = %s OR (distro_id IS NULL AND %s IS NULL))
-                    """,
-                    (title, distro_id_val, distro_id_val),
-                )
+
+                if distro_id_val is None:
+                    cur.execute(
+                        """
+                        SELECT id FROM commands
+                        WHERE title = %s
+                          AND distro_id IS NULL
+                        """,
+                        (title,),
+                    )
+                else:
+                    cur.execute(
+                        """
+                        SELECT id FROM commands
+                        WHERE title = %s
+                          AND distro_id = %s
+                        """,
+                        (title, distro_id_val),
+                    )
+
                 if cur.fetchone() is None:
                     cur.execute(
                         """

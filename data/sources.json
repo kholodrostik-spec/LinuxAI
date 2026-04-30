@@ -1,30 +1,34 @@
 [
-  {
-    "title": "Arch Wiki - NVIDIA",
-    "url": "https://wiki.archlinux.org/title/NVIDIA",
-    "source_type": "wiki",
-    "topic": "nvidia",
-    "trust_level": "medium"
-  },
-  {
-    "title": "Arch Wiki - Wireless network configuration",
-    "url": "https://wiki.archlinux.org/title/Network_configuration/Wireless",
-    "source_type": "wiki",
-    "topic": "wifi",
-    "trust_level": "medium"
-  },
-  {
-    "title": "Arch Wiki - Intel graphics",
-    "url": "https://wiki.archlinux.org/title/Intel_graphics",
-    "source_type": "wiki",
-    "topic": "intel",
-    "trust_level": "medium"
-  },
-  {
-    "title": "Arch Wiki - AMDGPU",
-    "url": "https://wiki.archlinux.org/title/AMDGPU",
-    "source_type": "wiki",
-    "topic": "amd",
-    "trust_level": "medium"
-  }
+  {"title": "Arch Wiki - NVIDIA",                        "url": "https://wiki.archlinux.org/title/NVIDIA",                                                      "source_type": "wiki",          "topic": "nvidia",      "trust_level": "high"},
+  {"title": "Arch Wiki - Nouveau",                       "url": "https://wiki.archlinux.org/title/Nouveau",                                                     "source_type": "wiki",          "topic": "nvidia",      "trust_level": "medium"},
+  {"title": "Arch Wiki - AMDGPU",                       "url": "https://wiki.archlinux.org/title/AMDGPU",                                                      "source_type": "wiki",          "topic": "amd",         "trust_level": "high"},
+  {"title": "Arch Wiki - ATI Radeon",                    "url": "https://wiki.archlinux.org/title/ATI",                                                         "source_type": "wiki",          "topic": "amd",         "trust_level": "medium"},
+  {"title": "Arch Wiki - Intel graphics",                "url": "https://wiki.archlinux.org/title/Intel_graphics",                                              "source_type": "wiki",          "topic": "intel",       "trust_level": "high"},
+  {"title": "Arch Wiki - PRIME hybrid graphics",         "url": "https://wiki.archlinux.org/title/PRIME",                                                       "source_type": "wiki",          "topic": "nvidia",      "trust_level": "high"},
+  {"title": "Arch Wiki - Wireless network",              "url": "https://wiki.archlinux.org/title/Network_configuration/Wireless",                              "source_type": "wiki",          "topic": "wifi",        "trust_level": "high"},
+  {"title": "Arch Wiki - Bluetooth",                     "url": "https://wiki.archlinux.org/title/Bluetooth",                                                   "source_type": "wiki",          "topic": "bluetooth",   "trust_level": "high"},
+  {"title": "Arch Wiki - PipeWire",                      "url": "https://wiki.archlinux.org/title/PipeWire",                                                    "source_type": "wiki",          "topic": "audio",       "trust_level": "high"},
+  {"title": "Arch Wiki - ALSA",                          "url": "https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture",                           "source_type": "wiki",          "topic": "audio",       "trust_level": "high"},
+  {"title": "Arch Wiki - Sound Open Firmware",           "url": "https://wiki.archlinux.org/title/Sound_Open_Firmware",                                         "source_type": "wiki",          "topic": "audio",       "trust_level": "high"},
+  {"title": "Arch Wiki - Kernel modules",                "url": "https://wiki.archlinux.org/title/Kernel_module",                                               "source_type": "wiki",          "topic": "kernel",      "trust_level": "high"},
+  {"title": "Arch Wiki - Secure Boot",                   "url": "https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot",           "source_type": "wiki",          "topic": "boot",        "trust_level": "high"},
+  {"title": "Arch Wiki - DKMS",                          "url": "https://wiki.archlinux.org/title/Dynamic_Kernel_Module_Support",                               "source_type": "wiki",          "topic": "kernel",      "trust_level": "high"},
+  {"title": "Arch Wiki - Power management",              "url": "https://wiki.archlinux.org/title/Power_management",                                            "source_type": "wiki",          "topic": "power",       "trust_level": "high"},
+  {"title": "Arch Wiki - TLP",                           "url": "https://wiki.archlinux.org/title/TLP",                                                         "source_type": "wiki",          "topic": "power",       "trust_level": "high"},
+  {"title": "Arch Wiki - Laptop",                        "url": "https://wiki.archlinux.org/title/Laptop",                                                      "source_type": "wiki",          "topic": "laptop",      "trust_level": "high"},
+  {"title": "Arch Wiki - libinput",                      "url": "https://wiki.archlinux.org/title/Libinput",                                                    "source_type": "wiki",          "topic": "input",       "trust_level": "medium"},
+  {"title": "Arch Wiki - fwupd",                         "url": "https://wiki.archlinux.org/title/Fwupd",                                                       "source_type": "wiki",          "topic": "firmware",    "trust_level": "medium"},
+  {"title": "Arch Wiki - SSD",                           "url": "https://wiki.archlinux.org/title/Solid_state_drive",                                           "source_type": "wiki",          "topic": "storage",     "trust_level": "medium"},
+  {"title": "Arch Wiki - NetworkManager",                "url": "https://wiki.archlinux.org/title/NetworkManager",                                              "source_type": "wiki",          "topic": "network",     "trust_level": "high"},
+  {"title": "Arch Wiki - Systemd",                       "url": "https://wiki.archlinux.org/title/Systemd",                                                     "source_type": "wiki",          "topic": "init",        "trust_level": "high"},
+  {"title": "Arch Wiki - Pacman",                        "url": "https://wiki.archlinux.org/title/Pacman",                                                      "source_type": "wiki",          "topic": "package",     "trust_level": "high"},
+  {"title": "Debian Wiki - NvidiaGraphicsDrivers",       "url": "https://wiki.debian.org/NvidiaGraphicsDrivers",                                                "source_type": "wiki",          "topic": "nvidia",      "trust_level": "high"},
+  {"title": "Debian Wiki - iwlwifi",                     "url": "https://wiki.debian.org/iwlwifi",                                                              "source_type": "wiki",          "topic": "wifi",        "trust_level": "high"},
+  {"title": "Debian Wiki - Bluetooth",                   "url": "https://wiki.debian.org/Bluetooth",                                                            "source_type": "wiki",          "topic": "bluetooth",   "trust_level": "medium"},
+  {"title": "Debian Wiki - SoundCard",                   "url": "https://wiki.debian.org/SoundCard",                                                            "source_type": "wiki",          "topic": "audio",       "trust_level": "medium"},
+  {"title": "Debian Wiki - SecureBoot",                  "url": "https://wiki.debian.org/SecureBoot",                                                           "source_type": "wiki",          "topic": "boot",        "trust_level": "medium"},
+  {"title": "Debian Wiki - Firmware",                    "url": "https://wiki.debian.org/Firmware",                                                             "source_type": "wiki",          "topic": "firmware",    "trust_level": "high"},
+  {"title": "Fedora - NVIDIA via RPM Fusion",            "url": "https://rpmfusion.org/Howto/NVIDIA",                                                           "source_type": "wiki",          "topic": "nvidia",      "trust_level": "high"},
+  {"title": "Ubuntu NVIDIA drivers installation",        "url": "https://ubuntu.com/server/docs/nvidia-drivers-installation",                                   "source_type": "official_docs", "topic": "nvidia",      "trust_level": "high"},
+  {"title": "Kernel.org - Linux Wireless iwlwifi",       "url": "https://wireless.wiki.kernel.org/en/users/drivers/iwlwifi",                                    "source_type": "official_docs", "topic": "wifi",        "trust_level": "high"}
 ]
