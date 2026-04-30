@@ -25,7 +25,7 @@
     "topic": "wifi",
     "source_type": "manual_note",
     "trust_level": "medium",
-    "text": "Intel Wi-Fi adapters such as AX200 and AX201 use the iwlwifi kernel driver. On Ubuntu and Debian, firmware is provided by the linux-firmware package. To install: sudo apt install linux-firmware. After installation, reload the module: sudo modprobe -r iwlwifi && sudo modprobe iwlwifi."
+    "text": "Intel Wi-Fi adapters such as AX200 and AX201 usually use the iwlwifi kernel driver. On Ubuntu, firmware is commonly provided by the linux-firmware package. Before installing packages or reloading modules, first check lspci -nnk | grep -A4 -E \"Network|Wireless\", rfkill list, uname -r, and dmesg | grep -i firmware. Do not reload iwlwifi with modprobe -r unless diagnostics show the module is loaded but malfunctioning. Do not remove linux-firmware as rollback."
   },
   {
     "title": "Wi-Fi rfkill soft block",
@@ -68,5 +68,285 @@
     "source_type": "manual_note",
     "trust_level": "medium",
     "text": "Intel laptop audio problems on Ubuntu should be diagnosed through ALSA, PipeWire, and Sound Open Firmware. First check cat /proc/asound/cards to see whether the kernel detects a sound card. Then check systemctl --user status pipewire and pactl list short sinks. On newer Intel laptops, missing SOF firmware can cause audio devices to be absent. Avoid using ubuntu-drivers devices as the main audio troubleshooting step because it is usually more relevant to proprietary GPU drivers."
+  },
+  {
+    "title": "Global safe troubleshooting answer pattern",
+    "topic": "answer_pattern_global",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "A safe LinuxAI answer should follow this workflow: diagnose first, decide based on diagnostics, act only if needed, then verify. Check first should contain only diagnostic commands. Next steps should not contain action commands if diagnostics are missing. Avoid purge, remove, firmware downgrade, module removal, blacklisting, Secure Boot changes, or bootloader changes unless clearly justified. Rollback must not be more dangerous than the original action. If no safe rollback exists, say that no safe rollback command is recommended at this stage."
+  },
+  {
+    "title": "Good answer pattern for NVIDIA nvidia-smi no devices found",
+    "topic": "answer_pattern_nvidia",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For the issue 'NVIDIA driver installed but nvidia-smi says no devices were found', do not reinstall drivers immediately. First check whether the GPU is detected with lspci -nnk | grep -A4 -E \"VGA|3D|Display\". Then check whether NVIDIA kernel modules are loaded with lsmod | grep nvidia. Also check Secure Boot state with mokutil --sb-state. Treat nvidia-smi as a low-risk verification command. Do not suggest prime-select unless hybrid graphics or Optimus and nvidia-prime are confirmed. Do not suggest purge or remove as rollback at this stage."
+  },
+  {
+    "title": "Good answer pattern for NVIDIA driver missing on Ubuntu",
+    "topic": "answer_pattern_nvidia",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Ubuntu NVIDIA driver missing or not installed, first check lspci -nnk | grep -A4 -E \"VGA|3D|Display\" and ubuntu-drivers devices. Only if Ubuntu recommends a proprietary driver and the driver is missing should sudo ubuntu-drivers autoinstall be suggested as a medium-risk action. After installation, reboot and verify with nvidia-smi and lsmod | grep nvidia. Do not blacklist nouveau unless diagnostics show nouveau is loaded or conflicting."
+  },
+  {
+    "title": "Good answer pattern for NVIDIA Secure Boot module blocked",
+    "topic": "answer_pattern_secure_boot",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For NVIDIA driver installed but kernel module not loading, Secure Boot may block the NVIDIA module. First check mokutil --sb-state and lsmod | grep nvidia. Do not recommend disabling Secure Boot as the first solution. Mention MOK enrollment or BIOS/UEFI Secure Boot settings as options, not automatic commands. Do not suggest mokutil --disable-validation unless the user explicitly asks how to disable Secure Boot."
+  },
+  {
+    "title": "Good answer pattern for nouveau conflict",
+    "topic": "answer_pattern_nouveau",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For possible nouveau conflict with NVIDIA proprietary driver, first confirm with lsmod | grep nouveau and lspci -nnk | grep -A4 -E \"VGA|3D|Display\". Do not suggest blacklisting nouveau unless diagnostics show nouveau is loaded or conflicting. Blacklisting nouveau and updating initramfs is a system-changing action and should be marked medium risk."
+  },
+  {
+    "title": "Good answer pattern for NVIDIA hybrid graphics",
+    "topic": "answer_pattern_nvidia",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For NVIDIA hybrid graphics or Optimus laptops, do not suggest prime-select unless diagnostics or context confirm hybrid graphics and nvidia-prime is installed. First check prime-select query, nvidia-smi, and lspci GPU information. prime-select intel or prime-select nvidia changes graphics mode and should be treated as medium risk. Verify after reboot with nvidia-smi and prime-select query."
+  },
+  {
+    "title": "Good answer pattern for laptop overheating and battery drain",
+    "topic": "answer_pattern_power",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For laptop overheating or fast battery drain, do not reinstall GPU drivers as the first action. First collect diagnostics: inxi -Fxz for system summary, sensors for temperatures, nvidia-smi for NVIDIA GPU activity, prime-select query for graphics mode, and powerprofilesctl get for power profile. Do not suggest apt remove or purge NVIDIA drivers as rollback. Do not suggest prime-select intel unless hybrid graphics and nvidia-prime are confirmed. If diagnostics are missing, say that no action command is recommended until diagnostics are reviewed."
+  },
+  {
+    "title": "Power troubleshooting on Ubuntu laptop",
+    "topic": "power",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Ubuntu laptop power issues, first check powerprofilesctl get, upower -i $(upower -e | grep BAT), inxi -B, and sensors if available. Actions such as installing TLP, changing GPU mode, or changing power profiles should only be suggested after diagnostics show the likely cause. Verification should use non-changing commands such as powerprofilesctl get, nvidia-smi, and sensors."
+  },
+  {
+    "title": "Good answer pattern for Intel AX201 Wi-Fi not detected",
+    "topic": "answer_pattern_wifi",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Intel AX201 Wi-Fi not detected on Ubuntu, diagnose before changing modules or packages. First check lspci -nnk | grep -A4 -E \"Network|Wireless\" to see whether the adapter is detected and which driver is in use. Then check rfkill list and dmesg | grep -i firmware. Intel AX201 usually uses the iwlwifi kernel driver and firmware from linux-firmware on Ubuntu. Do not reload iwlwifi with modprobe -r unless diagnostics show the module is loaded but malfunctioning. Do not remove linux-firmware as rollback."
+  },
+  {
+    "title": "Good answer pattern for Wi-Fi after kernel update",
+    "topic": "answer_pattern_wifi",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Wi-Fi not working after a kernel update, first check uname -r, lspci -nnk | grep -A4 -E \"Network|Wireless\", lsmod, rfkill list, and dmesg | grep -i firmware. If the issue started after a kernel update, suggest trying the previous kernel from GRUB as a safe comparison step. Do not reload kernel modules or install DKMS drivers until the exact adapter, kernel version, and driver state are known."
+  },
+  {
+    "title": "Good answer pattern for Wi-Fi soft blocked",
+    "topic": "answer_pattern_wifi",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Wi-Fi soft blocked on Ubuntu, first check rfkill list. If Wi-Fi is soft-blocked, sudo rfkill unblock wifi is a medium-risk action because it changes device state but is usually safe. If Wi-Fi is hard-blocked, software commands may not fix it; check hardware switch, keyboard wireless toggle, BIOS/UEFI wireless setting, or airplane mode."
+  },
+  {
+    "title": "Good answer pattern for Realtek RTL8821CE Wi-Fi on Ubuntu",
+    "topic": "answer_pattern_realtek_wifi",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Realtek RTL8821CE Wi-Fi not working on Ubuntu, first identify the exact adapter and driver state with lspci -nnk | grep -A4 -E \"Network|Wireless\". Also check rfkill list and dmesg | grep -i firmware. Do not assume Debian-specific firmware-realtek is available on Ubuntu. Do not reload the 8821ce module unless lsmod confirms it exists. Do not invent exact DKMS packages. If no driver is in use, ask for Ubuntu version, kernel version, Secure Boot state, and lspci output before suggesting installation."
+  },
+  {
+    "title": "Good answer pattern for MediaTek MT7921 Wi-Fi",
+    "topic": "answer_pattern_mediatek_wifi",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For MediaTek MT7921 Wi-Fi not working, first check kernel version with uname -r, adapter detection with lspci -nnk | grep -A4 -E \"Network|Wireless\", rfkill list, and firmware errors with dmesg | grep -i firmware. Modern kernels usually include MediaTek drivers, so do not suggest random GitHub drivers before checking kernel and firmware. If diagnostics are missing, ask for exact command output."
+  },
+  {
+    "title": "Good answer pattern for Bluetooth after suspend",
+    "topic": "answer_pattern_bluetooth",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Bluetooth not working after suspend on Ubuntu, first collect diagnostics with rfkill list, systemctl status bluetooth, bluetoothctl list, and dmesg | grep -i bluetooth. Do not install, reinstall, remove, or purge firmware packages unless dmesg explicitly shows missing firmware. Do not remove linux-firmware. Restarting the Bluetooth service can be suggested only if diagnostics show that the service is inactive, failed, or stuck. If diagnostics are missing, Next steps should say that no action command is recommended until diagnostics are reviewed."
+  },
+  {
+    "title": "Good answer pattern for Bluetooth device not detected",
+    "topic": "answer_pattern_bluetooth",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Bluetooth adapter not detected on Ubuntu, first check whether the adapter is visible with lsusb, rfkill list, systemctl status bluetooth, bluetoothctl list, and dmesg | grep -i bluetooth. If Bluetooth is part of an Intel, Realtek, MediaTek, or Qualcomm Wi-Fi card, missing firmware may be related, but do not suggest installing linux-firmware until dmesg shows missing firmware or firmware load errors. Do not use modprobe -r btusb unless diagnostics show btusb is loaded but malfunctioning. If no adapter is visible, ask for lsusb and dmesg output before suggesting actions."
+  },
+  {
+    "title": "Good answer pattern for Intel laptop audio",
+    "topic": "answer_pattern_audio",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Intel laptop audio not working on Ubuntu, do not use ubuntu-drivers devices as the main troubleshooting step. First check cat /proc/asound/cards, systemctl --user status pipewire, pactl list short sinks, and dmesg | grep -i -E \"sof|audio|snd\". Do not suggest linux-firmware as the first action unless dmesg shows missing firmware. Do not suggest switching back to ALSA unless retrieved context explicitly supports it. Verification commands should not change volume or system state."
+  },
+  {
+    "title": "Good answer pattern for no audio output devices",
+    "topic": "answer_pattern_audio",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For no audio output devices on Ubuntu, first check cat /proc/asound/cards and pactl list short sinks. Then check systemctl --user status pipewire and systemctl --user status wireplumber. Do not change volume as a verification step. pactl get-sink-volume @DEFAULT_SINK@ is safer than pactl set-sink-volume because it does not change system state."
+  },
+  {
+    "title": "Good answer pattern for touchpad not working",
+    "topic": "answer_pattern_touchpad",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For touchpad not working on Ubuntu, first check whether the input device exists using xinput list if running X11, or libinput list-devices if available. Also check dmesg | grep -i -E \"i2c|hid|touchpad\". Do not suggest kernel parameter changes, blacklisting modules, or editing bootloader settings before diagnostics. Check BIOS/UEFI touchpad mode if the touchpad is not detected at all."
+  },
+  {
+    "title": "Good answer pattern for fingerprint reader",
+    "topic": "answer_pattern_fingerprint",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For fingerprint reader not working on Linux, first identify the USB device with lsusb. Many Goodix, Validity, and Synaptics fingerprint readers have limited Linux support. Do not promise support or suggest random drivers. Ask for lsusb output and check whether fprintd supports the exact device."
+  },
+  {
+    "title": "Good answer pattern for NVMe SSD not detected",
+    "topic": "answer_pattern_storage",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For NVMe SSD not detected during Linux installation, first check BIOS/UEFI storage mode, lsblk, lspci -nnk | grep -A4 -i nvme, and dmesg | grep -i nvme. Some laptops use Intel RST or RAID mode; switching to AHCI can make the SSD visible to Linux, but it may affect existing Windows installations. Do not recommend changing storage mode without warning about Windows boot impact."
+  },
+  {
+    "title": "Good answer pattern for broken after kernel update",
+    "topic": "answer_pattern_kernel",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For hardware that stopped working after a kernel update, first compare current kernel with uname -r, check previous kernel availability in GRUB, and inspect dmesg for driver or firmware errors. Do not immediately reinstall drivers. Suggest booting the previous kernel as a safe comparison step. If a DKMS module is involved, check DKMS status before reinstalling packages."
+  },
+  {
+    "title": "Good answer pattern for DKMS module failure",
+    "topic": "answer_pattern_dkms",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For DKMS module failure, first check dkms status, uname -r, and whether kernel headers are installed. Installing kernel headers or rebuilding DKMS is a medium-risk action. Do not claim DKMS bypasses Secure Boot. If Secure Boot is enabled, signed modules or MOK enrollment may still be required."
+  },
+  {
+    "title": "Good answer pattern for command risk classification",
+    "topic": "answer_pattern_risk",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "Low-risk commands are diagnostic commands that do not change system state, such as lspci, lsusb, uname -r, lsmod, rfkill list, ip a, nvidia-smi, mokutil --sb-state, cat /proc/asound/cards, pactl list short sinks, and systemctl status. Medium-risk commands change packages, services, modules, or device state, such as apt install, systemctl restart, rfkill unblock, modprobe, prime-select, update-initramfs, and reboot. High-risk commands include purge/remove of drivers or firmware, bootloader changes, Secure Boot disabling, rm in system paths, dd, mkfs, and storage mode changes."
+  },
+  {
+    "title": "Good answer pattern for rollback safety",
+    "topic": "answer_pattern_safety",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "Rollback should be safe and proportional. Do not offer purge/remove as generic rollback. Do not remove linux-firmware as rollback. Do not remove NVIDIA drivers unless the user explicitly asks for driver removal or diagnostics confirm the driver caused a severe issue. If no safe rollback exists, say that no safe rollback command is recommended at this stage."
+  },
+  {
+    "title": "Good answer pattern for insufficient context",
+    "topic": "answer_pattern_global",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "If the retrieved context is insufficient or the user has not provided diagnostics, ask for exact command outputs. Prefer asking for cat /etc/os-release, uname -r, lspci -nnk, lsusb, lsmod, rfkill list, and relevant dmesg filters depending on the topic. Do not guess exact package versions, driver names, or hardware-specific fixes without evidence."
+  },
+  {
+    "title": "Good answer pattern for Ubuntu package versions",
+    "topic": "answer_pattern_safety",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "Do not suggest exact Ubuntu package versions unless the exact version appears in retrieved context or package history provided by the user. Do not suggest firmware downgrades without known-good version information. If a previous package version is relevant, ask the user for apt history or package policy output first."
+  },
+  {
+    "title": "Good answer pattern for safe verification",
+    "topic": "answer_pattern_global",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "Verification sections should use commands that do not change system state. Examples include nvidia-smi, lsmod | grep module, lspci -nnk filters, rfkill list, ip link show, pactl list short sinks, powerprofilesctl get, sensors, and systemctl status. Avoid using install, remove, restart, set, unblock, modprobe, or prime-select in verification unless explicitly framed as an action, not verification."
+  },
+  {
+    "title": "Good answer pattern for NVIDIA laptop overheating",
+    "topic": "answer_pattern_power",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For an NVIDIA laptop overheating on Ubuntu, do not start with driver reinstall, driver removal, or purge commands. First check system summary and temperatures with inxi -Fxz and sensors. Then check whether the NVIDIA GPU is active with nvidia-smi. If the NVIDIA GPU is constantly active, ask for prime-select query output before suggesting any graphics mode change. If diagnostics are missing, Next steps should say that no action command is recommended until diagnostics are reviewed."
+  },
+  {
+    "title": "Good answer pattern for NVIDIA laptop battery drain",
+    "topic": "answer_pattern_power",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For fast battery drain on an Ubuntu NVIDIA laptop, prioritize diagnostics over changes. First check inxi -Fxz for system summary, nvidia-smi for GPU activity, powerprofilesctl get for power profile, and prime-select query for graphics mode. Do not suggest sudo ubuntu-drivers autoinstall as the first action. Do not suggest sudo prime-select intel unless hybrid graphics and nvidia-prime are confirmed. Do not suggest removing NVIDIA drivers as rollback."
+  },
+  {
+    "title": "Good answer pattern for NVIDIA GPU always active",
+    "topic": "answer_pattern_power",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "If the user says the NVIDIA GPU seems always active, first verify with nvidia-smi. Check which processes are using the GPU. Then check prime-select query to see the current graphics mode. Changing graphics mode with prime-select is an action command and should only be suggested if nvidia-prime is installed and the laptop uses hybrid graphics. Verification commands like nvidia-smi are low risk."
+  },
+  {
+    "title": "Good answer pattern for laptop heat after NVIDIA driver install",
+    "topic": "answer_pattern_power",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "If overheating started after installing the NVIDIA driver, do not immediately purge NVIDIA packages. First check nvidia-smi to see GPU temperature and processes, check inxi -Fxz for driver and GPU mode information, and check sensors for CPU/GPU temperatures. If Secure Boot or driver loading is not part of the issue, do not prioritize mokutil. Rollback should not use apt purge unless the user explicitly asks for driver removal and diagnostics justify it."
+  },
+  {
+    "title": "Good answer pattern for general laptop overheating on Ubuntu",
+    "topic": "answer_pattern_power",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For general laptop overheating on Ubuntu, first collect diagnostics: inxi -Fxz for system summary, sensors for temperatures, and top or htop for CPU load. If the laptop has NVIDIA graphics, also check nvidia-smi. Do not suggest driver installation, firmware removal, package purge, or kernel module changes before diagnostics. If no diagnostics are available, do not provide action commands."
+  },
+  {
+    "title": "Good answer pattern for power profile troubleshooting",
+    "topic": "answer_pattern_power",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Ubuntu power profile troubleshooting, powerprofilesctl get is a safe diagnostic command. Changing the profile with powerprofilesctl set power-saver is an action command. It can be suggested only after checking current profile and user goal. For overheating or battery drain, checking the current profile is safer than immediately changing drivers or graphics mode."
+  },
+  {
+    "title": "Good answer pattern for safe overheating rollback",
+    "topic": "answer_pattern_power",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For overheating and battery drain issues, rollback should be conservative. Do not suggest apt purge nvidia-driver, apt remove linux-firmware, module blacklisting, or Secure Boot changes as generic rollback. If no specific action was taken, say no safe rollback command is recommended at this stage. If a graphics mode change was made with prime-select, rollback can be switching back to the previous mode only if the previous mode is known."
+  },
+  {
+    "title": "Bad answer pattern for overheating and battery drain",
+    "topic": "answer_pattern_power",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "Bad answer pattern: For Ubuntu laptop overheating and battery drain, do not immediately suggest sudo ubuntu-drivers autoinstall, sudo prime-select intel, or sudo apt purge nvidia-driver. These are action commands and may be wrong without diagnostics. A good answer starts with inxi -Fxz, sensors, nvidia-smi, powerprofilesctl get, or prime-select query depending on context."
+  },
+  {
+    "title": "Good answer pattern for Intel AX201 Wi-Fi after kernel update",
+    "topic": "answer_pattern_wifi",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Intel AX201 Wi-Fi not detected after a kernel update on Ubuntu, do not use GPU diagnostic commands such as lspci filters for VGA, 3D, or Display. First check the Wi-Fi adapter with lspci -nnk | grep -A4 -E \"Network|Wireless\". Then check rfkill list and dmesg | grep -i firmware. Intel AX201 usually uses the iwlwifi kernel driver. If diagnostics are missing, do not suggest module reloads or package installation yet. Ask for lspci, rfkill, uname -r, and dmesg firmware output."
+  },
+  {
+    "title": "Good answer pattern for Wi-Fi hardware detection",
+    "topic": "answer_pattern_wifi",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Wi-Fi hardware detection issues, the correct lspci filter is lspci -nnk | grep -A4 -E \"Network|Wireless\". Do not use lspci -nnk | grep -A4 -E \"VGA|3D|Display\" because that is for GPU troubleshooting. Check whether the adapter appears, whether a kernel driver is in use, and whether firmware errors appear in dmesg."
+  },
+  {
+    "title": "Good answer pattern for Bluetooth after suspend acceptable flow",
+    "topic": "answer_pattern_bluetooth",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "For Bluetooth not working after suspend, a good safe answer starts with diagnostics: rfkill list, systemctl status bluetooth, bluetoothctl list, and dmesg | grep -i bluetooth. bluetoothctl list and dmesg filters are diagnostics, not system-changing actions. Restarting Bluetooth service with sudo systemctl restart bluetooth is a medium-risk action and should only be suggested if systemctl status bluetooth shows the service is failed, inactive, or stuck. Do not purge firmware or remove linux-firmware."
+  },
+  {
+    "title": "Good answer pattern for Bluetooth command placeholders",
+    "topic": "answer_pattern_bluetooth",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "Avoid final commands with placeholders such as bluetoothctl info [device_address]. If a device address is needed, first ask the user to run bluetoothctl devices and provide the output. Final command examples should be directly runnable unless the answer clearly says the user must replace a value. Prefer bluetoothctl list, bluetoothctl show, rfkill list, systemctl status bluetooth, and dmesg | grep -i bluetooth as safe diagnostics."
+  },
+  {
+    "title": "Good answer pattern for separating diagnostics and actions",
+    "topic": "answer_pattern_global",
+    "source_type": "manual_note",
+    "trust_level": "high",
+    "text": "A command can be useful even if it appears in Next steps, but diagnostic commands should not be presented as system-changing actions. Commands like rfkill list, bluetoothctl list, dmesg filters, lspci, lsmod, nvidia-smi, and systemctl status are diagnostics. Commands like apt install, apt remove, systemctl restart, modprobe -r, rfkill unblock, prime-select, and update-initramfs are actions."
   }
 ]
