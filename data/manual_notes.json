@@ -165,14 +165,14 @@
     "topic": "answer_pattern_bluetooth",
     "source_type": "manual_note",
     "trust_level": "high",
-    "text": "For Bluetooth not working after suspend on Ubuntu, first collect diagnostics with rfkill list, systemctl status bluetooth, bluetoothctl list, and dmesg | grep -i bluetooth. Do not install, reinstall, remove, or purge firmware packages unless dmesg explicitly shows missing firmware. Do not remove linux-firmware. Restarting the Bluetooth service can be suggested only if diagnostics show that the service is inactive, failed, or stuck. If diagnostics are missing, Next steps should say that no action command is recommended until diagnostics are reviewed."
+    "text": "For Bluetooth not working after suspend on Ubuntu, first check rfkill list, systemctl status bluetooth, bluetoothctl list, and dmesg | grep -i bluetooth. Do not purge firmware packages. Do not remove linux-firmware. Restarting the Bluetooth service can be suggested only after diagnostics show that the service is inactive or stuck. If no safe rollback exists, say that no safe rollback command is recommended at this stage."
   },
   {
     "title": "Good answer pattern for Bluetooth device not detected",
     "topic": "answer_pattern_bluetooth",
     "source_type": "manual_note",
     "trust_level": "high",
-    "text": "For Bluetooth adapter not detected on Ubuntu, first check whether the adapter is visible with lsusb, rfkill list, systemctl status bluetooth, bluetoothctl list, and dmesg | grep -i bluetooth. If Bluetooth is part of an Intel, Realtek, MediaTek, or Qualcomm Wi-Fi card, missing firmware may be related, but do not suggest installing linux-firmware until dmesg shows missing firmware or firmware load errors. Do not use modprobe -r btusb unless diagnostics show btusb is loaded but malfunctioning. If no adapter is visible, ask for lsusb and dmesg output before suggesting actions."
+    "text": "For Bluetooth adapter not detected, first check lsusb, rfkill list, systemctl status bluetooth, and dmesg | grep -i bluetooth. If Bluetooth is part of an Intel or Realtek Wi-Fi card, missing firmware may be related, but do not install or remove firmware until diagnostics show missing firmware. Do not use modprobe -r btusb unless diagnostics show btusb is loaded and stuck."
   },
   {
     "title": "Good answer pattern for Intel laptop audio",
@@ -333,14 +333,14 @@
     "topic": "answer_pattern_bluetooth",
     "source_type": "manual_note",
     "trust_level": "high",
-    "text": "For Bluetooth not working after suspend, a good safe answer starts with diagnostics: rfkill list, systemctl status bluetooth, bluetoothctl list, and dmesg | grep -i bluetooth. bluetoothctl list and dmesg filters are diagnostics, not system-changing actions. Restarting Bluetooth service with sudo systemctl restart bluetooth is a medium-risk action and should only be suggested if systemctl status bluetooth shows the service is failed, inactive, or stuck. Do not purge firmware or remove linux-firmware."
+    "text": "For Bluetooth not working after suspend, a good answer may first check rfkill list and systemctl status bluetooth. bluetoothctl list and dmesg | grep -i bluetooth are also useful diagnostics. Restarting Bluetooth service should only be suggested if diagnostics show the service is inactive or stuck. Do not purge firmware or remove linux-firmware."
   },
   {
     "title": "Good answer pattern for Bluetooth command placeholders",
     "topic": "answer_pattern_bluetooth",
     "source_type": "manual_note",
     "trust_level": "high",
-    "text": "Avoid final commands with placeholders such as bluetoothctl info [device_address]. If a device address is needed, first ask the user to run bluetoothctl devices and provide the output. Final command examples should be directly runnable unless the answer clearly says the user must replace a value. Prefer bluetoothctl list, bluetoothctl show, rfkill list, systemctl status bluetooth, and dmesg | grep -i bluetooth as safe diagnostics."
+    "text": "Avoid final commands with placeholders such as bluetoothctl info [device_address]. If a device address is needed, first ask the user to run bluetoothctl devices and provide the output. Final command examples should be directly runnable unless the answer clearly says the user must replace a value."
   },
   {
     "title": "Good answer pattern for separating diagnostics and actions",
